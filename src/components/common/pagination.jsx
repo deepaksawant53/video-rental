@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 const Pagination = props => {
   const { itemsCount, pageSize, onPageChange, currentPage } = props;
   const pagesCount = Math.ceil(itemsCount / pageSize);
-  console.log(currentPage);
   if (pagesCount === 1) {
     return null;
   }
