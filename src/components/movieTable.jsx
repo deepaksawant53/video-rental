@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Like from './common/like';
-import TableHeader from './common/tableHeader';
-import TableBody from './common/tableBody';
+import Table from './common/table';
+
 class MoviesTable extends Component {
   // We are initializing this column property here because throughout the life of this component
   // the value of this property is never going to be changed.
@@ -15,12 +15,9 @@ class MoviesTable extends Component {
   ];
 
   render() {
-    const { movies, sortColumn, onLike, onDelete, onSort } = this.props;
+    const { movies, sortColumn, onSort } = this.props;
     return (
-      <table className="table">
-        <TableHeader columns={this.columns} sortColumn={sortColumn} onSort={onSort} />
-        <TableBody data={movies} columns={this.columns} sortColumn={sortColumn} keyProperty={{ name: '_id' }} onLike={onLike} onDelete={onDelete} onSort={onSort} />
-      </table>
+      <Table data={movies} columns={this.columns} sortColumn={sortColumn} keyPropertyForBody={{ name: '_id' }} onSort={onSort} />
     );
   }
 }
