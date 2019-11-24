@@ -19,7 +19,7 @@ class MoviesTable extends Component {
     return (
       <table className="table">
         <TableHeader columns={this.columns} sortColumn={sortColumn} onSort={onSort} />
-        <TableBody data={movies} columns={this.columns} keyProperty={{ name: '_id' }} onLike={onLike} onDelete={onDelete} onSort={onSort} />
+        <TableBody data={movies} columns={this.columns} sortColumn={sortColumn} keyProperty={{ name: '_id' }} onLike={onLike} onDelete={onDelete} onSort={onSort} />
       </table>
     );
   }
