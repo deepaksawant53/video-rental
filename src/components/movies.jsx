@@ -48,12 +48,20 @@ class movies extends Component {
     this.setState({ sortColumn });
   }
 
-  render() {
-    const { length: count } = this.state.movies;
-    const { pageSize, currentPage, movies: allMovies, genres, selectedGenre, sortColumn } = this.state;
-    if (count === 0) return <p>There are no movies in the database</p>
+  getPagedData = () => {
+    const { pageSize, currentPage, movies: allMovies, sortColumn } = this.state;
     const sortedMovies = _.orderBy(allMovies, [sortColumn.propertyName], [sortColumn.order]);
     const movies = paginate(sortedMovies, currentPage, pageSize);
+
+    return movies;
+  }
+
+  render() {
+    const { length: count } = this.state.movies;
+    const { pageSize, currentPage, sortColumn, genres, selectedGenre } = this.state;
+
+    if (count === 0) return <p>There are no movies in the database</p>
+
     return (
       <div className="row">
         <div className="col-md-3">
@@ -61,7 +69,7 @@ class movies extends Component {
         </div>
         <div className="col">
           <span>Showing {count} movies in the database</span>
-          <MoviesTable movies={movies} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
+          <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
           <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
         </div>
       </div>
