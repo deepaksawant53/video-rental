@@ -1,32 +1,25 @@
 import React, { Component } from 'react';
 import Like from './common/like';
+import TableHeader from './common/tableHeader';
 
 class MoviesTable extends Component {
-  raiseSort = propertyName => {
-    const sortColumn = { ...this.props.sortColumn };
-    if (sortColumn.propertyName === propertyName) {
-      sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
-    } else {
-      sortColumn.propertyName = propertyName;
-      sortColumn.order = 'asc';
-    }
-    this.props.onSort(sortColumn);
-  }
+  // We are initializing this column property here because throughout the life of this component
+  // the value of this property is never going to be changed.
+  columns = [
+    { key: 'title', propertyName: 'title', label: 'Title' },
+    { key: 'genre', propertyName: 'genre.name', label: 'Genre' },
+    { key: 'numberInStock', propertyName: 'numberInStock', label: 'Stock' },
+    { key: 'dailyRentalRate', propertyName: 'dailyRentalRate', label: 'Rate' },
+    { key: 'like' },
+    { key: 'delete' }
+  ];
+
   render() {
-    const { movies, onLike, onDelete } = this.props;
+    const { movies, sortColumn, onLike, onDelete, onSort } = this.props;
     return (
 
       <table className="table">
-        <thead>
-          <tr>
-            <th onClick={() => this.raiseSort('title')} scope="col">Title</th>
-            <th onClick={() => this.raiseSort('genre.name')} scope="col">Genre</th>
-            <th onClick={() => this.raiseSort('numberInStock')} scope="col">Stock</th>
-            <th onClick={() => this.raiseSort('dailyRentalRate')} scope="col">Rate</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
+        <TableHeader columns={this.columns} sortColumn={sortColumn} onSort={onSort} />
         <tbody>
           {
             movies.map(movie =>
