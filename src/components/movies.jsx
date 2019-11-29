@@ -7,7 +7,7 @@ import { getGenres } from './../services/fakeGenreService';
 import MoviesTable from './movieTable';
 import _ from 'lodash';
 
-class movies extends Component {
+class Movies extends Component {
   state = {
     movies: [],
     pageSize: 4,
@@ -63,17 +63,19 @@ class movies extends Component {
     if (count === 0) return <p>There are no movies in the database</p>
 
     return (
-      <div className="row">
-        <div className="col-md-3">
-          <Filter elementList={genres} selectedElement={selectedGenre} onElementSelected={this.handleFilter} />
-        </div>
-        <div className="col">
-          <span>Showing {count} movies in the database</span>
-          <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
-          <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
+      <div>
+        <div className="row">
+          <div className="col-md-3">
+            <Filter elementList={genres} selectedElement={selectedGenre} onElementSelected={this.handleFilter} />
+          </div>
+          <div className="col">
+            <span>Showing {count} movies in the database</span>
+            <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
+            <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
+          </div>
         </div>
       </div>
     );
   }
 }
-export default movies;
+export default Movies;
