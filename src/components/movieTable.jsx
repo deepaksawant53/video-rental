@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Like from './common/like';
 import Table from './common/table';
+import { Link } from 'react-router-dom';
 
 class MoviesTable extends Component {
   // We are initializing this column property here because throughout the life of this component
   // the value of this property is never going to be changed.
   columns = [
-    { key: 'title', propertyName: 'title', label: 'Title' },
+    { key: 'title', propertyName: 'title', label: 'Title', jsxContent: movie => <Link to={`/movie/${movie._id}`}>{movie.title}</Link> },
     { key: 'genre', propertyName: 'genre.name', label: 'Genre' },
     { key: 'numberInStock', propertyName: 'numberInStock', label: 'Stock' },
     { key: 'dailyRentalRate', propertyName: 'dailyRentalRate', label: 'Rate' },
