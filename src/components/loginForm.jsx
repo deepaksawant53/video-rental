@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 
 class LoginForm extends Component {
+  handleSubmit = e => {
+    e.preventDefault();//This prevents the default submit action in which the whole page gets reloaded and due to which bundle.js and login.html was getting reloaded.
+
+    // Here we can write logic to Call the server
+    console.log('Submitted');
+  }
   render() {
     return (
       <div>
         <h1>Login</h1>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input id="username" type="text" className="form-control" />
