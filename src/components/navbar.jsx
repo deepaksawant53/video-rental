@@ -1,8 +1,5 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Movies } from './movies';
-import { Customers } from './customers';
-import { Rentals } from './rentals';
 
 const Navbar = props => {
   return (
