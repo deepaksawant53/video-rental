@@ -4,10 +4,21 @@ import Input from './common/input';
 class LoginForm extends Component {
   state = {
     account: { username: '', password: '' },
+    errors: {
+      username: 'Username is required!!!'
+    }
+  }
+
+  validate = () => {
+    return { username: 'Username is required!!!' }
   }
 
   handleSubmit = e => {
     e.preventDefault();//This prevents the default submit action in which the whole page gets reloaded and due to which bundle.js and login.html was getting reloaded.
+
+    const errors = this.validate();
+    this.setState({ errors });
+    if (errors) return;
 
     // Here we can write logic to Call the server
     console.log('Submitted')
