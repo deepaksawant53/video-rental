@@ -4,9 +4,7 @@ import Input from './common/input';
 class LoginForm extends Component {
   state = {
     account: { username: '', password: '' },
-    errors: {
-      username: 'Username is required!!!'
-    }
+    errors: {}
   }
 
   validate = () => {
@@ -25,8 +23,8 @@ class LoginForm extends Component {
     e.preventDefault();//This prevents the default submit action in which the whole page gets reloaded and due to which bundle.js and login.html was getting reloaded.
 
     const errors = this.validate();
-    console.log(errors);
-    this.setState({ errors });
+    // Here if errors value is truthy then it will set errors else it will set empty object inside errors.
+    this.setState({ errors: errors || {} });
     if (errors) return;
 
     // Here we can write logic to Call the server
@@ -40,7 +38,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { account } = this.state;
+    const { account, errors } = this.state;
     return (
       <div>
         <h1>Login</h1>
@@ -49,12 +47,16 @@ class LoginForm extends Component {
             name="username"
             value={account.username}
             label="Username"
-            onChange={this.handleChange} />
+            onChange={this.handleChange}
+            error={errors.username}
+          />
           <Input
             name="password"
             value={account.password}
             label="Password"
-            onChange={this.handleChange} />
+            onChange={this.handleChange}
+            error={errors.password}
+          />
 
           <button className="btn btn-primary">Login</button>
         </form>
