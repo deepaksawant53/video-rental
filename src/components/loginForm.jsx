@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Input from './common/input';
+import Joi from 'joi-browser';
 
 class LoginForm extends Component {
   state = {
@@ -7,16 +8,34 @@ class LoginForm extends Component {
     errors: {}
   }
 
+  // This we are writing outside state because this will be initialised only once. 
+  // It is a schema for joi validation library.
+  schema = {
+    username: Joi.string().required().label('Username'),// Label is used to define friendly name of field in the error message.
+    password: Joi.string().required().label('Password')
+  }
+
   validate = () => {
+    const options = { abortEarly: false };
+    // Error object returned by Joi.validate() is as follows
+    // {"error":
+    //    {
+    //      "isJoi":true,
+    //      "name":"ValidationError",
+    //      "details":[
+    //          {"message":"\"Username\" is not allowed to be empty","path":["username"],"type":"any.empty","context":{"value":"","invalids":[""],"key":"username","label":"Username"}},
+    //          {"message":"\"Password\" is not allowed to be empty","path":["password"],"type":"any.empty","context":{"value":"","invalids":[""],"key":"password","label":"Password"}}
+    //      ],
+    //      "_object":{"username":"","password":""}},
+    //      "value":{"username":"","password":""}
+    // }
+    const { error } = Joi.validate(this.state.account, this.schema, options);
+
+    if (!error) return null;
+
     const errors = {};
-
-    const { account } = this.state;
-    if (account.username.trim() === '')
-      errors.username = 'Username is required';
-    if (account.password.trim() === '')
-      errors.password = 'Password is required';
-
-    return Object.keys(errors).length === 0 ? null : errors;
+    for (let item of error.details) errors[item.path[0]] = item.message;
+    return errors;
   }
 
   handleSubmit = e => {
