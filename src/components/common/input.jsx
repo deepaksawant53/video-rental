@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({ name, label, value, error, onChange }) => {
+const Input = ({ name, label, error, ...rest }) => {
   return (
     <div className="form-group">
       <label
@@ -8,11 +8,9 @@ const Input = ({ name, label, value, error, onChange }) => {
         {label}
       </label>
       <input
+        {...rest}
         name={name}
-        onChange={onChange}
-        value={value}
         id={name}
-        type="text"
         className="form-control"
       />
       {/* If error is truthy then only the element will be rendered else if error is falsy element wont be rendered. */}
