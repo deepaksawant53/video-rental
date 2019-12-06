@@ -8,6 +8,7 @@ import NotFound from './components/common/notFound'
 import Navbar from './components/navbar';
 import LoginForm from './components/loginForm';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import RegistrationForm from './components/registrationForm';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/customers" component={Customers} />
           <Route path="/rentals" component={Rentals} />
           <Route path="/movie/:id" component={Movie} />
+          <Route path="/register" component={RegistrationForm} />
           <Route path="/not-found" component={NotFound} />
           <Redirect from="/" exact to="/movies" />
           <Redirect to="/not-found" />
