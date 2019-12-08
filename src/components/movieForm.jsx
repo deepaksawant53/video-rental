@@ -26,7 +26,7 @@ class MovieForm extends Form {
   };
 
   render() {
-    const { genreList, errors } = this.state;
+    const { genreList, errors, data } = this.state;
     return (
       <form action={this.handle}>
         <h1>Movie Form</h1>
@@ -34,9 +34,15 @@ class MovieForm extends Form {
           {this.renderInput("title", "Title")}
           <label htmlFor="genre">Genre</label>
           <div className="form-group">
-            <select className="custom-select">
+            <select className="custom-select" defaultValue={data["genre"]}>
+              {!data["genre"] && <option></option>}
               {genreList.map(genre =>
-                <option key={genre["_id"]} value={genre["name"]}>{genre["name"]}</option>
+                <option
+                  key={genre["_id"]}
+                  value={genre["name"]}
+                >
+                  {genre["name"]}
+                </option>
               )}
             </select>
             {errors['genre'] && <div className="alert alert-danger">{errors['genre']}</div>}
