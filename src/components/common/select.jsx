@@ -1,17 +1,20 @@
 import React from 'react';
 
-const Select = ({ onChange, selectedOption, options, keyProperty, valueProperty, error }) => {
+const Select = ({ onChange, selectedOption, name, label, options, keyProperty, valueProperty, optionProperty, error }) => {
   return (
     <div className="form-group">
+      <label htmlFor={name}>{label}</label>
       <select
         className="custom-select"
+        name={name}
         defaultValue={selectedOption}
         onChange={onChange}>
         {!selectedOption && <option></option>}
         {options.map(option =>
           <option
             key={option[keyProperty]}
-            value={option[valueProperty]}
+            value={option[optionProperty]}
+            selected={selectedOption === option[optionProperty] ? true : false}
           >
             {option[valueProperty]}
           </option>

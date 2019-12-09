@@ -52,7 +52,7 @@ class Form extends Component {
     this.setState({ errors: errors || {} });
     if (errors) return;
 
-    this.doSubmit();
+    this.doSubmit({ ...this.state.data });
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -63,12 +63,9 @@ class Form extends Component {
 
     const data = { ...this.state.data };
     data[input.name] = input.value;
+    console.log("data", data);
     this.setState({ data, errors });
   };
-
-  handleSelect = e => {
-    console.log("Select option changed: ", e);
-  }
 
   renderButton(label) {
     return (
@@ -92,15 +89,18 @@ class Form extends Component {
     );
   }
 
-  renderSelect(name, options, keyProperty, valueProperty) {
+  renderSelect(name, label, options, keyProperty, valueProperty, optionProperty) {
     const { data, errors } = this.state;
     return (
       <Select
-        selectedOption={data[name]}
         options={options}
+        name={name}
+        label={label}
         keyProperty={keyProperty}
         valueProperty={valueProperty}
-        onChange={handleSelect}
+        optionProperty={optionProperty}
+        selectedOption={data[name]}
+        onChange={this.handleChange}
         error={errors[name]}
       />
     )
