@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { getMovies } from './../services/fakeMovieService';
+import { getGenres } from './../services/fakeGenreService';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
 import Filter from './common/filter';
-import { getGenres } from './../services/fakeGenreService';
 import MoviesTable from './movieTable';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 class Movies extends Component {
@@ -15,16 +16,16 @@ class Movies extends Component {
     genres: [],
     selectedGenre: {},
     sortColumn: { propertyName: 'title', order: 'asc' }
-  }
+  };
 
   componentDidMount() {
     const defaultGenre = { _id: 0, name: 'All Genres' }
     this.setState({ movies: getMovies(), genres: [{ ...defaultGenre }, ...getGenres()], selectedGenre: defaultGenre });
-  }
+  };
 
   handleDeleteMovie = movieId => {
     this.setState({ movies: this.state.movies.filter(movie => movie._id !== movieId) });
-  }
+  };
 
   handleLike = movie => {
     const movies = [...this.state.movies];
@@ -33,20 +34,20 @@ class Movies extends Component {
     movies[index].liked = !movies[index].liked;
 
     this.setState({ movies });
-  }
+  };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
-  }
+  };
 
   handleFilter = genre => {
     const filteredMovies = genre.name === 'All Genres' ? getMovies() : getMovies().filter(movie => movie.genre._id === genre._id);
     this.setState({ selectedGenre: genre, movies: filteredMovies, currentPage: 1 });
-  }
+  };
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
-  }
+  };
 
   getPagedData = () => {
     const { pageSize, currentPage, movies: allMovies, sortColumn } = this.state;
@@ -54,6 +55,10 @@ class Movies extends Component {
     const movies = paginate(sortedMovies, currentPage, pageSize);
 
     return movies;
+  };
+
+  handleNewMovieEvent = () => {
+    this.props.history.push("/movies/new");
   }
 
   render() {
@@ -69,13 +74,24 @@ class Movies extends Component {
             <Filter elementList={genres} selectedElement={selectedGenre} onElementSelected={this.handleFilter} />
           </div>
           <div className="col">
-            <span>Showing {count} movies in the database</span>
-            <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
-            <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
+            <div className="row">
+              <Link
+                to="/movie/new"
+                className="btn btn-primary"
+                style={{ marginBottom: 20 }}
+              >
+                New Movie
+              </Link>
+            </div>
+            <div className="row">
+              <span>Showing {count} movies in the database</span>
+              <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
+              <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
+            </div>
           </div>
         </div>
       </div>
     );
-  }
+  };
 }
 export default Movies;
