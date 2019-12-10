@@ -57,9 +57,21 @@ class Movies extends Component {
     return movies;
   };
 
+  handleMovieSearch = ({ currentTarget: searchBox }) => {
+    console.log("search value", searchBox.value);
+    if (searchBox) {
+      const allMovies = [...getMovies()];
+      const filteredMovies = allMovies.filter(movie => movie.title.includes(searchBox.value));
+      console.log("all movies", filteredMovies);
+      this.setState({ movies: filteredMovies });
+    } else {
+      this.setState({ movies: getMovies() });
+    }
+  };
+
   handleNewMovieEvent = () => {
     this.props.history.push("/movies/new");
-  }
+  };
 
   render() {
     const { length: count } = this.state.movies;
@@ -85,6 +97,7 @@ class Movies extends Component {
             </div>
             <div className="row">
               <span>Showing {count} movies in the database</span>
+              <input type="text" className="form-control" id="movieSearch" placeholder="Search..." onChange={this.handleMovieSearch} style={{ marginBottom: 10, marginTop: 15 }}></input>
               <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
               <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
             </div>
