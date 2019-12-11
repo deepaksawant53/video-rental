@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 class Movies extends Component {
+  searchText = React.createRef();
   state = {
     movies: [],
     pageSize: 4,
@@ -41,6 +42,7 @@ class Movies extends Component {
   };
 
   handleFilter = genre => {
+    this.searchText.current.value = '';
     const filteredMovies = genre.name === 'All Genres' ? getMovies() : getMovies().filter(movie => movie.genre._id === genre._id);
     this.setState({ selectedGenre: genre, movies: filteredMovies, currentPage: 1 });
   };
@@ -58,14 +60,12 @@ class Movies extends Component {
   };
 
   handleMovieSearch = ({ currentTarget: searchBox }) => {
-    console.log("search value", searchBox.value);
-    if (searchBox) {
+    if (searchBox.value) {
       const allMovies = [...getMovies()];
-      const filteredMovies = allMovies.filter(movie => movie.title.includes(searchBox.value));
-      console.log("all movies", filteredMovies);
-      this.setState({ movies: filteredMovies });
+      const filteredMoviesBySearch = allMovies.filter(movie => movie.title.toLowerCase().indexOf(searchBox.value.toLowerCase()) >= 0);
+      this.setState({ movies: filteredMoviesBySearch, selectedGenre: {}, currentPage: 1 });
     } else {
-      this.setState({ movies: getMovies() });
+      this.setState({ movies: getMovies(), selectedGenre: { _id: 0, name: 'All Genres' }, currentPage: 1 });
     }
   };
 
@@ -97,7 +97,7 @@ class Movies extends Component {
             </div>
             <div className="row">
               <span>Showing {count} movies in the database</span>
-              <input type="text" className="form-control" id="movieSearch" placeholder="Search..." onChange={this.handleMovieSearch} style={{ marginBottom: 10, marginTop: 15 }}></input>
+              <input ref={this.searchText} type="text" className="form-control" id="movieSearch" placeholder="Search..." onChange={this.handleMovieSearch} style={{ marginBottom: 10, marginTop: 15 }}></input>
               <MoviesTable movies={this.getPagedData()} sortColumn={sortColumn} onLike={this.handleLike} onDelete={this.handleDeleteMovie} onSort={this.handleSort} />
               <Pagination itemsCount={count} pageSize={pageSize} currentPage={currentPage} onPageChange={this.handlePageChange} />
             </div>
