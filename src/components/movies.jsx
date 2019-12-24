@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getMovies } from './../services/fakeMovieService';
-import { getGenres } from './../services/fakeGenreService';
+import getGenres from './../services/genreService';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
 import Filter from './common/filter';
@@ -21,9 +21,9 @@ class Movies extends Component {
     sortColumn: { propertyName: 'title', order: 'asc' }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const defaultGenre = { _id: 0, name: 'All Genres' }
-    this.setState({ movies: getMovies(), genres: [{ ...defaultGenre }, ...getGenres()], selectedGenre: defaultGenre });
+    this.setState({ movies: getMovies(), genres: [{ ...defaultGenre }, ...await getGenres()], selectedGenre: defaultGenre });
   };
 
   handleDeleteMovie = movieId => {
