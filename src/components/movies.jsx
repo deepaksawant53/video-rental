@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getMovies } from './../services/fakeMovieService';
+import getMovies from './../services/moviesService';
 import getGenres from './../services/genreService';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
@@ -23,7 +23,7 @@ class Movies extends Component {
 
   async componentDidMount() {
     const defaultGenre = { _id: 0, name: 'All Genres' }
-    this.setState({ movies: getMovies(), genres: [{ ...defaultGenre }, ...await getGenres()], selectedGenre: defaultGenre });
+    this.setState({ movies: await getMovies(), genres: [{ ...defaultGenre }, ...await getGenres()], selectedGenre: defaultGenre });
   };
 
   handleDeleteMovie = movieId => {
@@ -43,8 +43,9 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
 
-  handleFilter = genre => {
-    const filteredMovies = genre.name === 'All Genres' ? getMovies() : getMovies().filter(movie => movie.genre._id === genre._id);
+  handleFilter = async genre => {
+    const movies = await getMovies();
+    const filteredMovies = genre.name === 'All Genres' ? movies : movies.filter(movie => movie.genre._id === genre._id);
     this.setState({ selectedGenre: genre, movies: filteredMovies, searchText: "", currentPage: 1 });
   };
 
