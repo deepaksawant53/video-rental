@@ -2,7 +2,8 @@ import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
 import { getGenres } from './../services/fakeGenreService';
-import { getMovie, saveMovie } from './../services/fakeMovieService';
+import { saveMovie } from './../services/fakeMovieService';
+import movieService from './../services/movieService';
 
 class MovieForm extends Form {
   state = {
@@ -11,10 +12,10 @@ class MovieForm extends Form {
     errors: {}
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ genreList: [...getGenres()] });
     if (this.props.match.params.id !== "new") {
-      const movie = getMovie(this.props.match.params.id);
+      const movie = await movieService.getMovie(this.props.match.params.id);
       if (!movie) return this.props.history.replace("/not-found");
       this.setState({ data: { title: movie.title, genreId: movie.genre._id, numberInStock: movie.numberInStock, rate: movie.dailyRentalRate } });
       this.validate();
