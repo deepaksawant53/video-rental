@@ -37,6 +37,12 @@ class MovieForm extends Form {
       } catch (error) {
         toast.error("Unable to update movie details.");
       }
+    } else {
+      try {
+        await movieService.addMovie({ title, genreId, numberInStock, dailyRentalRate });
+      } catch (error) {
+        toast.error("Unable to add movie details.");
+      }
     }
     this.props.history.replace("/movies");
   };

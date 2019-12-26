@@ -20,6 +20,14 @@ const deleteMovie = async movieId => {
   }
 }
 
+const addMovie = async movie => {
+  try {
+    await http.post(apiEndpoint, movie);
+  } catch (error) {
+    throw error;
+  }
+}
+
 const updateMovie = async (id, movie) => {
   try {
     await http.put(apiEndpoint + '/' + id, movie);
@@ -32,5 +40,6 @@ export default {
   getMovie,
   getMovies,
   deleteMovie,
+  addMovie,
   updateMovie
 }
