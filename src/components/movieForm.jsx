@@ -1,9 +1,9 @@
 import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
-import { getGenres } from './../services/fakeGenreService';
-import { saveMovie } from './../services/fakeMovieService';
+import getGenres from './../services/genreService';
 import movieService from './../services/movieService';
+import { toast } from 'react-toastify';
 
 class MovieForm extends Form {
   state = {
@@ -13,7 +13,7 @@ class MovieForm extends Form {
   };
 
   async componentDidMount() {
-    this.setState({ genreList: [...getGenres()] });
+    this.setState({ genreList: [...await getGenres()] });
     if (this.props.match.params.id !== "new") {
       const movie = await movieService.getMovie(this.props.match.params.id);
       if (!movie) return this.props.history.replace("/not-found");
@@ -29,10 +29,18 @@ class MovieForm extends Form {
     rate: Joi.number().precision(2).min(0).max(10).label('Rate')
   }
 
-  doSubmit = ({ title, genreId, numberInStock, rate: dailyRentalRate }) => {
-    saveMovie({ title, genreId, numberInStock, dailyRentalRate });
+  doSubmit = async ({ title, genreId, numberInStock, rate: dailyRentalRate }) => {
+    const id = this.props.match.params.id;
+    if (this.props.match.params.id !== "new") {
+      try {
+        await movieService.updateMovie(id, { title, genreId, numberInStock, dailyRentalRate });
+      } catch (error) {
+        toast.error("Unable to update movie details.");
+      }
+    }
     this.props.history.replace("/movies");
   };
+
 
   render() {
     const { genreList, errors, data } = this.state;

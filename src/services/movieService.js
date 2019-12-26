@@ -20,8 +20,17 @@ const deleteMovie = async movieId => {
   }
 }
 
+const updateMovie = async (id, movie) => {
+  try {
+    await http.put(apiEndpoint + '/' + id, movie);
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default {
   getMovie,
   getMovies,
-  deleteMovie
+  deleteMovie,
+  updateMovie
 }
