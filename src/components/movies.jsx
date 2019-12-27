@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { getMovies } from './../services/fakeMovieService';
-import { getGenres } from './../services/fakeGenreService';
+import movieService from '../services/movieService';
+import getGenres from './../services/genreService';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
 import Filter from './common/filter';
@@ -8,6 +8,7 @@ import MoviesTable from './movieTable';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import SearchBox from './common/searchBox';
+import { toast } from 'react-toastify';
 
 class Movies extends Component {
   searchText = React.createRef();
@@ -21,13 +22,25 @@ class Movies extends Component {
     sortColumn: { propertyName: 'title', order: 'asc' }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const defaultGenre = { _id: 0, name: 'All Genres' }
-    this.setState({ movies: getMovies(), genres: [{ ...defaultGenre }, ...getGenres()], selectedGenre: defaultGenre });
+    this.setState({ movies: await movieService.getMovies(), genres: [{ ...defaultGenre }, ...await getGenres()], selectedGenre: defaultGenre });
   };
 
-  handleDeleteMovie = movieId => {
-    this.setState({ movies: this.state.movies.filter(movie => movie._id !== movieId) });
+  handleDeleteMovie = async movieId => {
+    let allMovies = this.state.movies;
+    const originalMovies = [...allMovies];
+    const updatedMovieList = allMovies.filter(currentMovie => movieId != currentMovie._id);
+
+    this.setState({ movies: updatedMovieList });
+    try {
+      await movieService.deleteMovie(movieId);
+    } catch (error) {
+      if (error.response && error.response.status == 404) {
+        toast.error("This movie has already been deleted.");
+      }
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handleLike = movie => {
@@ -43,8 +56,9 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
 
-  handleFilter = genre => {
-    const filteredMovies = genre.name === 'All Genres' ? getMovies() : getMovies().filter(movie => movie.genre._id === genre._id);
+  handleFilter = async genre => {
+    const movies = await movieService.getMovies();
+    const filteredMovies = genre.name === 'All Genres' ? movies : movies.filter(movie => movie.genre._id === genre._id);
     this.setState({ selectedGenre: genre, movies: filteredMovies, searchText: "", currentPage: 1 });
   };
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
-import { getGenres } from './../services/fakeGenreService';
-import { getMovie, saveMovie } from './../services/fakeMovieService';
+import getGenres from './../services/genreService';
+import movieService from './../services/movieService';
+import { toast } from 'react-toastify';
 
 class MovieForm extends Form {
   state = {
@@ -11,10 +12,10 @@ class MovieForm extends Form {
     errors: {}
   };
 
-  componentDidMount() {
-    this.setState({ genreList: [...getGenres()] });
+  async componentDidMount() {
+    this.setState({ genreList: [...await getGenres()] });
     if (this.props.match.params.id !== "new") {
-      const movie = getMovie(this.props.match.params.id);
+      const movie = await movieService.getMovie(this.props.match.params.id);
       if (!movie) return this.props.history.replace("/not-found");
       this.setState({ data: { title: movie.title, genreId: movie.genre._id, numberInStock: movie.numberInStock, rate: movie.dailyRentalRate } });
       this.validate();
@@ -22,16 +23,30 @@ class MovieForm extends Form {
   }
 
   schema = {
-    title: Joi.string().required().label('Title'),
+    title: Joi.string().required().min(5).label('Title'),
     genreId: Joi.string().required().label('Genre'),
     numberInStock: Joi.number().integer().min(0).max(100).label('Number in stock'),
     rate: Joi.number().precision(2).min(0).max(10).label('Rate')
   }
 
-  doSubmit = ({ title, genreId, numberInStock, rate: dailyRentalRate }) => {
-    saveMovie({ title, genreId, numberInStock, dailyRentalRate });
+  doSubmit = async ({ title, genreId, numberInStock, rate: dailyRentalRate }) => {
+    const id = this.props.match.params.id;
+    if (this.props.match.params.id !== "new") {
+      try {
+        await movieService.updateMovie(id, { title, genreId, numberInStock, dailyRentalRate });
+      } catch (error) {
+        toast.error("Unable to update movie details.");
+      }
+    } else {
+      try {
+        await movieService.addMovie({ title, genreId, numberInStock, dailyRentalRate });
+      } catch (error) {
+        toast.error("Unable to add movie details.");
+      }
+    }
     this.props.history.replace("/movies");
   };
+
 
   render() {
     const { genreList, errors, data } = this.state;
