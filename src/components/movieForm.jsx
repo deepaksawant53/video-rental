@@ -12,8 +12,11 @@ class MovieForm extends Form {
     errors: {}
   };
 
-  async componentDidMount() {
+  populateGenres = async () => {
     this.setState({ genreList: [...await getGenres()] });
+  }
+
+  populateMovie = () => {
     if (this.props.match.params.id !== "new") {
       try {
         const movie = await movieService.getMovie(this.props.match.params.id);
@@ -25,6 +28,11 @@ class MovieForm extends Form {
       }
       this.validate();
     }
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovie();
   }
 
   schema = {
