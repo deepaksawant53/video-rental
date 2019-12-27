@@ -15,9 +15,14 @@ class MovieForm extends Form {
   async componentDidMount() {
     this.setState({ genreList: [...await getGenres()] });
     if (this.props.match.params.id !== "new") {
-      const movie = await movieService.getMovie(this.props.match.params.id);
-      if (!movie) return this.props.history.replace("/not-found");
-      this.setState({ data: { title: movie.title, genreId: movie.genre._id, numberInStock: movie.numberInStock, rate: movie.dailyRentalRate } });
+      try {
+        const movie = await movieService.getMovie(this.props.match.params.id);
+        this.setState({ data: { title: movie.title, genreId: movie.genre._id, numberInStock: movie.numberInStock, rate: movie.dailyRentalRate } });
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          this.props.history.replace("/not-found");
+        }
+      }
       this.validate();
     }
   }
