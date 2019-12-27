@@ -34,10 +34,10 @@ class Movies extends Component {
 
     this.setState({ movies: updatedMovieList });
     try {
-      movieService.deleteMovie(movieId);
+      await movieService.deleteMovie(movieId);
     } catch (error) {
       if (error.response && error.response.status == 404) {
-        toast.error("This post has already been deleted.");
+        toast.error("This movie has already been deleted.");
       }
       this.setState({ movies: originalMovies });
     }
