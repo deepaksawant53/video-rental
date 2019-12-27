@@ -16,7 +16,7 @@ class MovieForm extends Form {
     this.setState({ genreList: [...await getGenres()] });
   }
 
-  populateMovie = () => {
+  populateMovie = async () => {
     if (this.props.match.params.id !== "new") {
       try {
         const movie = await movieService.getMovie(this.props.match.params.id);
