@@ -18,7 +18,7 @@ const deleteMovie = async movieId => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 const addMovie = async movie => {
   try {
@@ -26,7 +26,7 @@ const addMovie = async movie => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 const updateMovie = async (id, movie) => {
   try {
@@ -34,7 +34,7 @@ const updateMovie = async (id, movie) => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 export default {
   getMovie,
@@ -42,4 +42,4 @@ export default {
   deleteMovie,
   addMovie,
   updateMovie
-}
+};
