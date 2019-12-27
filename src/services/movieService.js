@@ -1,6 +1,7 @@
 import http from './common/httpService';
+import config from '../config.json';
 
-const apiEndpoint = "http://localhost:3900/api/movies";
+const apiEndpoint = config.apiUrl + 'movies';
 
 const getMovie = async movieId => {
   const { data: movie } = await http.get(apiEndpoint + '/' + movieId);
