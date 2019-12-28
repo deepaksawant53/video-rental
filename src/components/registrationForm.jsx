@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
+import userService from '../services/userService'
 
 class RegistrationForm extends Form {
   state = {
@@ -14,7 +15,8 @@ class RegistrationForm extends Form {
     name: Joi.string().required().label('Name')
   };
 
-  doSubmit = () => {
+  doSubmit = async () => {
+    await userService.registerUser(this.state.data);
     console.log("Submitted Registration!!!")
   }
 
