@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
-
+import authService from '../services/authService';
 class LoginForm extends Form {
   state = {
     data: { username: '', password: '' },
@@ -15,8 +15,10 @@ class LoginForm extends Form {
     password: Joi.string().required().label('Password')
   };
 
-  doSubmit = () => {
+  doSubmit = async () => {
+    const { data } = this.state;
     // Here we can write logic to Call the server
+    await authService.login(data.username, data.password);
     console.log('Submitted')
   }
 
