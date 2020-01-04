@@ -10,6 +10,7 @@ import Navbar from './components/navbar';
 import LoginForm from './components/loginForm';
 import MovieForm from './components/movieForm';
 import RegistrationForm from './components/registrationForm';
+import Logout from './components/logout';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +35,7 @@ class App extends Component {
         <main className="container">
           <Switch>
             <Route path="/login" component={LoginForm} />
+            <Route path="/logout" component={Logout} />
             <Route path="/movies/new" component={MovieForm} />
             <Route path="/movies" component={Movies} />
             <Route path="/customers" component={Customers} />
