@@ -11,6 +11,7 @@ import LoginForm from './components/loginForm';
 import MovieForm from './components/movieForm';
 import RegistrationForm from './components/registrationForm';
 import Logout from './components/logout';
+import authService from './services/authService';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,14 +20,10 @@ class App extends Component {
   state = {};
 
   componentDidMount() {
-    try {
-      const jwt = localStorage.getItem('token');
-      const user = jwtDecode(jwt);
-      this.setState({ user });
-    } catch (error) {
-
-    }
-  }
+    const user = authService.getCurrentUser();
+    this.setState({ user });
+  };
+  
   render() {
     return (
       <React.Fragment>
