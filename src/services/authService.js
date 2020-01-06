@@ -14,6 +14,10 @@ const logout = () => {
   localStorage.removeItem(tokenKey);
 };
 
+const loginWithJwt = jwt => {
+  localStorage.setItem(tokenKey, jwt);
+};
+
 const getCurrentUser = () => {
   try {
     const jwt = localStorage.getItem(tokenKey);
@@ -24,13 +28,14 @@ const getCurrentUser = () => {
   }
 };
 
-const loginWithJwt = jwt => {
-  localStorage.setItem(tokenKey, jwt);
+const getJwt = () => {
+  return localStorage.getItem(tokenKey);
 };
 
 export default {
   login,
   logout,
   loginWithJwt,
-  getCurrentUser
+  getCurrentUser,
+  getJwt
 }
