@@ -15,6 +15,7 @@ import authService from './services/authService';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import ProtectedRoute from './components/common/protectedRoute';
 
 class App extends Component {
   state = {};
@@ -39,12 +40,10 @@ class App extends Component {
               render={props => <Movies {...props} user={this.state.user} />} />
             <Route path="/customers" component={Customers} />
             <Route path="/rentals" component={Rentals} />
-            <Route 
+            <ProtectedRoute
               path="/movie/:id" 
-              render={props => {
-                if (!user) return <Redirect to="/login" />
-                return <MovieForm {...props} />
-              }} />
+              component={MovieForm}
+            />
             <Route path="/register" component={RegistrationForm} />
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/movies" />
