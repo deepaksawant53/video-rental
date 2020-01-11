@@ -6,9 +6,13 @@ const ProtectedRoute = ({path, component: Component, render, ...rest}) => {//Whe
 
   return (
     <Route 
-      {...rest}      
+      {...rest }      
       render={props => {
-        if (!auth.getCurrentUser()) return <Redirect to="/login" />
+        console.log(props);
+        if (!auth.getCurrentUser()) return <Redirect to={{
+          pathname: "/login",
+          state: { from: props.location }
+        }} />
         // React expects components to start with a uppercase letter hence we are naming it with a uppercase C.
         return Component ? <Component {...props} /> : render(props);
       }}
