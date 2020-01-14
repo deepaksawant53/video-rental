@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import Form from './common/form';
 import Joi from 'joi-browser';
-
+import authService from '../services/authService';
 class LoginForm extends Form {
   state = {
     data: { username: '', password: '' },
@@ -15,12 +16,24 @@ class LoginForm extends Form {
     password: Joi.string().required().label('Password')
   };
 
-  doSubmit = () => {
-    // Here we can write logic to Call the server
-    console.log('Submitted')
+  doSubmit = async () => {
+    try {
+      const { data } = this.state;
+      await authService.login(data.username, data.password);
+      const { state } = this.props.location;
+      window.location = state ? state.from.pathname : "/";
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = error.response.data;
+        this.setState({ errors });
+      }
+    }
   }
 
   render() {
+    if (authService.getCurrentUser()) return <Redirect to="/" />
+
     return (
       <div>
         <h1>Login</h1>
